@@ -2,13 +2,13 @@ import yaml
 from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector():
-  def read_db_creds(self):
-    with open("db_creds.yaml","r") as creds_file:
+  def read_db_creds(self, yaml_file):
+    with open(yaml_file,"r") as creds_file:
       creds = yaml.safe_load(creds_file)
     return creds
   
   def init_db_engine(self):
-    creds = self.read_db_creds()
+    creds = self.read_db_creds("db_creds.yaml")
     user = creds["RDS_USER"]
     password = creds["RDS_PASSWORD"]
     host = creds["RDS_HOST"]
@@ -25,5 +25,11 @@ class DatabaseConnector():
     return tables
 
   def upload_to_db(self,dataframe,table_name):
-    engine = create_engine(f"postgresql+psycopg2://postgres:baobeiying123@localhost:5433/sales_data")
+    creds = self.read_db_creds("pgadmin4_creds.yaml")
+    user = creds["USER"]
+    password = creds["PASSWORD"]
+    host = creds["HOST"]
+    port = creds["PORT"]
+    db = creds["DATABASE"]
+    engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}")
     dataframe.to_sql(f"{table_name}",engine,if_exists='replace')
