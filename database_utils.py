@@ -23,8 +23,8 @@ class DatabaseConnector():
     inspector = inspect(engine)
     tables = inspector.get_table_names()
     return tables
-
-  def upload_to_db(self,dataframe,table_name):
+  
+  def pgadmin_engine(self):
     creds = self.read_db_creds("pgadmin4_creds.yaml")
     user = creds["USER"]
     password = creds["PASSWORD"]
@@ -32,4 +32,8 @@ class DatabaseConnector():
     port = creds["PORT"]
     db = creds["DATABASE"]
     engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}")
+    return engine
+
+  def upload_to_db(self,dataframe,table_name):
+    engine = self.pgadmin_engine()
     dataframe.to_sql(f"{table_name}",engine,if_exists='replace')
