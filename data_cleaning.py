@@ -12,8 +12,8 @@ class DataCleaning():
   def clean_card_data(self, df):
     df = df.replace("NULL", np.nan)
     df['date_payment_confirmed'] = pd.to_datetime(df['date_payment_confirmed'], errors='coerce',format = 'mixed')
-    df['card_number']= df['card_number'].drop_duplicates()
-    df['card_number'] = pd.to_numeric(df['card_number'], errors='coerce')
+    df['card_number'] = df['card_number'].str.replace(r'[^0-9]', '', regex=True)
+    df = df.drop_duplicates(subset=['card_number'])
     df= df.dropna(subset=['date_payment_confirmed'])
     return df
   
@@ -22,6 +22,8 @@ class DataCleaning():
     store_df['opening_date'] = pd.to_datetime(store_df['opening_date'], errors='coerce',format = 'mixed')
     store_df["staff_numbers"] = store_df["staff_numbers"].str.strip()
     store_df['staff_numbers'] = store_df['staff_numbers'].str.replace(r'[^0-9]', '', regex=True)
+    store_df["longitude"] = pd.to_numeric(store_df["longitude"],errors="coerce")
+    store_df["latitude"] = pd.to_numeric(store_df["latitude"],errors="coerce")
     store_df = store_df.dropna(subset=['opening_date'])
     return store_df
   
@@ -59,6 +61,8 @@ class DataCleaning():
                 return value / 1000
             elif 'ml' in unit:
                 return value / 1000  # Assuming 1ml = 1g
+            elif 'oz' in unit:
+                return value * 0.0283495  # 1 oz = 0.0283495 kg
             else:
                 return None  # Invalid or unknown unit
 
@@ -72,7 +76,9 @@ class DataCleaning():
   
   def clean_products_data(self, product_df):
      product_df = product_df.replace("NULL", np.nan)
-     product_df = product_df.dropna(subset=["weight"])
+     product_df["product_price"] = product_df["product_price"].replace(r'£', '', regex=True)
+     product_df["product_price"] = pd.to_numeric(product_df["product_price"],errors="coerce")
+     product_df = product_df.dropna(subset=["product_price"])
      return product_df
   
   def clean_date_times(self,date_df):

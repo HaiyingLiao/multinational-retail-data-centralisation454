@@ -2,7 +2,7 @@ import yaml
 from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
 from database_utils import DatabaseConnector
-1
+
 if __name__ == "__main__":
   extractor = DataExtractor()
   data_cleaner = DataCleaning()
@@ -77,11 +77,18 @@ if __name__ == "__main__":
 #   db_conn.upload_to_db(cleaned_order_data, "orders_table")
 
 #################################################################################
-# date times
-## extract date time data:
-  date_time_data = extractor.extract_from_s3("date_details.json","date_details.json")
-## clean date time data:
-  cleaned_date_time_data = data_cleaner.clean_date_times(date_time_data)
-  print(cleaned_date_time_data.info())
-## upload to database
-  db_conn.upload_to_db(cleaned_date_time_data, "dim_date_times")
+# # date times
+# ## extract date time data:
+#   date_time_data = extractor.extract_from_s3("date_details.json","date_details.json")
+# ## clean date time data:
+#   cleaned_date_time_data = data_cleaner.clean_date_times(date_time_data)
+#   print(cleaned_date_time_data.info())
+# ## upload to database
+#   db_conn.upload_to_db(cleaned_date_time_data, "dim_date_times")
+
+#################################################################################
+# check max number for column :
+#################################################################################
+  # max_len = cleaned_product_data['product_code'].astype(str).str.len().max() 
+  # print(max_len)
+

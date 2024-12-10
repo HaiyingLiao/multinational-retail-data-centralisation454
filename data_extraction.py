@@ -11,7 +11,7 @@ class DataExtractor():
   
   def retrieve_pdf_data(self, pdf_link):
     try:
-      card_df = tabula.read_pdf(pdf_link, stream=True, pages='all', output_format="dataframe")
+      card_df = tabula.read_pdf(pdf_link, stream=True, pages='all', output_format="dataframe", lattice=True)
       if not card_df or len(card_df) == 0:
           raise ValueError("No tables found in the provided PDF.")
       card_df = pd.concat(card_df, ignore_index=True)
