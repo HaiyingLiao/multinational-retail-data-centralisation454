@@ -82,7 +82,7 @@ if __name__ == "__main__":
 #   date_time_data = extractor.extract_from_s3("date_details.json","date_details.json")
 # ## clean date time data:
 #   cleaned_date_time_data = data_cleaner.clean_date_times(date_time_data)
-#   print(cleaned_date_time_data.info())
+#   print(cleaned_date_time_data["month"].head(10))
 # ## upload to database
 #   db_conn.upload_to_db(cleaned_date_time_data, "dim_date_times")
 
